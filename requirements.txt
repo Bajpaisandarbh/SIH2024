@@ -8,3 +8,5 @@ numpy
 pandas
 yt-dlp
 urllib3
+numba
+llvmlite
