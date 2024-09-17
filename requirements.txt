@@ -1,6 +1,6 @@
 streamlit==1.25.0
-torch==2.3.0
-torchvision==0.19.1  # Change this to an available version
+torch==2.4.1
+torchvision==0.19.1
 scipy==1.11.1
 librosa==0.10.1
 moviepy==1.0.3
@@ -8,4 +8,4 @@ numpy==1.24.3
 pandas==2.1.1
 yt-dlp==2023.7.6
 urllib3==2.0.4
-blazeface==0.1.0  # Assuming this is a custom or third-party package
+blazeface==0.1.0
