@@ -8,4 +8,3 @@ numpy
 pandas
 yt-dlp
 urllib3
-blazeface  # Custom module, ensure it's available for installation or included
