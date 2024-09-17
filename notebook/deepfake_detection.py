@@ -12,9 +12,9 @@ from io import BytesIO
 import yt_dlp
 import sys
 import pandas as pd
-
-# Import necessary modules
-sys.path.append('..')
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'blazeface')))
 from blazeface import FaceExtractor, BlazeFace, VideoReader
 from architectures import fornet, weights
 from isplutils import utils
