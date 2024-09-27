@@ -12,9 +12,9 @@ from io import BytesIO
 import yt_dlp
 import sys
 import pandas as pd
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'blazeface')))
+
+# Import necessary modules
+sys.path.append('..')
 from blazeface import FaceExtractor, BlazeFace, VideoReader
 from architectures import fornet, weights
 from isplutils import utils
@@ -138,8 +138,8 @@ def analyze_faces(faces_t):
         st.error(f"Error analyzing faces: {e}")
         return None
 
-# Create downloadable CSV report
-def create_report(fake_score, audio_score, duration, frame_rate, total_frames):
+# Create downloadable Excel report
+def create_excel_report(fake_score, audio_score, duration, frame_rate, total_frames):
     report_data = {
         'Fake Score': [fake_score],
         'Audio Score': [audio_score],
@@ -148,7 +148,16 @@ def create_report(fake_score, audio_score, duration, frame_rate, total_frames):
         'Total Frames': [total_frames]
     }
     df = pd.DataFrame(report_data)
-    return df.to_csv(index=False)
+    
+    # Use BytesIO buffer to save Excel file
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Deepfake_Report')
+    
+    # Seek to the beginning of the stream
+    output.seek(0)
+    
+    return output
 
 # Main function to process video and display results
 def process_video(video_file):
@@ -170,8 +179,8 @@ def process_video(video_file):
         audio_score = analyze_audio(audio_path) if audio_path else None
 
         show_progress(4, 5, "Generating report")
-        # Create downloadable report
-        csv_report = create_report(fake_score, audio_score, duration, frame_rate, total_frames)
+        # Create downloadable Excel report
+        excel_report = create_excel_report(fake_score, audio_score, duration, frame_rate, total_frames)
 
         # Display results
         st.success(f"Video Fakeness Score: {fake_score:.4f}")
@@ -180,12 +189,12 @@ def process_video(video_file):
         st.text(f"Frame Rate: {frame_rate} FPS")
         st.text(f"Total Frames: {total_frames}")
 
-        # Downloadable report
+        # Downloadable Excel report
         st.download_button(
-            label="Download Report as CSV",
-            data=csv_report,
-            file_name="deepfake_report.csv",
-            mime="text/csv"
+            label="Download Report as Excel",
+            data=excel_report,
+            file_name="deepfake_report.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
         # Decision logic: Determine if the video is real or fake based on the fakeness score
